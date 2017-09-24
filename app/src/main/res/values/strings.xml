@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Google Books Client</string>
+
+    <string name="no_match">The are no match</string>
+    <string name="pattern_prev_url"><Data><![CDATA[Part of the book <a href="%s"><b>link</b></a>]]></Data></string>
+
+    <string name="favourite_on" translatable="false">&#xE87D;</string>
+    <string name="favourite_off" translatable="false">&#xE87E;</string>
+
+    <string name="request_failed">Request failed in some reasons</string>
+
+    <string name="action_search">Search Book</string>
+    <string name="action_favourite">Favourite</string>
+</resources>
