@@ -8,6 +8,7 @@
     <string name="favourite_off" translatable="false">&#xE87E;</string>
 
     <string name="request_failed">Request failed in some reasons</string>
+    <string name="response_nothing_found">Nothing found</string>
 
     <string name="action_search">Search Book</string>
     <string name="action_favourite">Favourite</string>

@@ -2,11 +2,11 @@ package com.example.gbooks.googlebooksclient.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -59,7 +59,8 @@ public class SearchActivity extends BaseActivity implements NetworkManager.Liste
     }
 
     @Override
-    public void requestSuccess(List<Book> books) {
+    public void requestSuccess(@NonNull List<Book> books) {
+        if (books.size() == 0) showMessage(getString(R.string.response_nothing_found));
         mAdapter.updateBooksList(bookFavouriteManager.signFavBookInSearch(books));
     }
 

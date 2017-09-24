@@ -1,6 +1,7 @@
 package com.example.gbooks.googlebooksclient.manager;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.example.gbooks.googlebooksclient.model.Book;
 import com.example.gbooks.googlebooksclient.model.BooksResponse;
@@ -21,10 +22,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkManager {
 
     private BooksApi booksApi;
+    @Nullable
     private List<Book> lastResponse = new ArrayList<>();
 
     public interface Listener {
-        public void requestSuccess(List<Book> books);
+        public void requestSuccess(@NonNull List<Book> books);
         public void requestFailed();
     }
 
@@ -42,7 +44,8 @@ public class NetworkManager {
         booksApi.loadNovosibirskReport(query).enqueue(new CallbackReport());
     }
 
-    private void requestSuccess(List<Book> books) {
+    private void requestSuccess(@Nullable List<Book> books) {
+        if (books == null) books = new ArrayList<>();
         lastResponse = books;
         if (listener != null) listener.requestSuccess(books);
     }
@@ -72,6 +75,7 @@ public class NetworkManager {
         this.listener = null;
     }
 
+    @Nullable
     public List<Book> getLastResponse() {
         return lastResponse;
     }
