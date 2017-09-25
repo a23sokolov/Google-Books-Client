@@ -41,7 +41,7 @@ public class NetworkManager {
     }
 
     public void doRequest(String query) {
-        booksApi.loadNovosibirskReport(query).enqueue(new CallbackReport());
+        booksApi.getBookResponse(query).enqueue(new CallbackReport());
     }
 
     private void requestSuccess(@Nullable List<Book> books) {

@@ -14,5 +14,5 @@ public interface BooksApi {
     public static final String BOOKS_ENDPOINT = "https://www.googleapis.com/books/";
 
     @GET("v1/volumes")
-    Call<BooksResponse> loadNovosibirskReport(@Query("q") String query);
+    Call<BooksResponse> getBookResponse(@Query("q") String query);
 }
