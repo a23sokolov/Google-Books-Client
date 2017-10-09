@@ -1,8 +1,6 @@
 package com.example.gbooks.googlebooksclient.view.component;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -11,11 +9,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.gbooks.googlebooksclient.CommonHelper;
 import com.example.gbooks.googlebooksclient.R;
-import com.example.gbooks.googlebooksclient.model.Book;
+import com.example.gbooks.googlebooksclient.model.dto.Book;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -33,7 +30,7 @@ public class BookItemView extends LinearLayout implements View.OnClickListener{
     private TextView title;
     private TextView author;
     private TextView prevLink;
-    private FavouriteView favImg;
+    private FavouriteIconView favImg;
 
     private boolean status;
     private Book book;
@@ -54,15 +51,14 @@ public class BookItemView extends LinearLayout implements View.OnClickListener{
         title = (TextView) findViewById(R.id.book_title);
         author = (TextView) findViewById(R.id.book_author);
         prevLink = (TextView) findViewById(R.id.book_link_prev);
-        favImg = (FavouriteView) findViewById(R.id.fav_btn);
+        favImg = (FavouriteIconView) findViewById(R.id.fav_btn);
     }
 
     public void setBook(Book bookData) {
         book = bookData;
         title.setText(book.getTitle());
         author.setText(book.getAuthor());
-        //TODO; maybe save link was clicked;
-        final String link = CommonHelper.GOOGLE_BOOK_PREV_URL_PATTERN_2.replace("%s", book.getPreviewLink());
+        final String link = CommonHelper.GOOGLE_BOOK_PREV_URL_PATTERN.replace("%s", book.getPreviewLink());
         prevLink.setClickable(true);
         prevLink.setMovementMethod(LinkMovementMethod.getInstance());
         prevLink.setText(Html.fromHtml(link));

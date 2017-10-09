@@ -1,13 +1,13 @@
-package com.example.gbooks.googlebooksclient.model;
+package com.example.gbooks.googlebooksclient.model.dto;
 
 /**
  * Created by a23sokolov on 23/09/2017.
  */
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.example.gbooks.googlebooksclient.database.table.BookTable;
@@ -16,7 +16,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Arrays;
 import java.util.List;
 
-public class Book {
+public class Book implements Parcelable{
 
     private boolean isFav;
     @SerializedName("id")
@@ -86,7 +86,7 @@ public class Book {
         this.volumeInfo.previewLink = previewLink;
     }
 
-    private class VolumeInfo {
+    private class VolumeInfo implements Parcelable{
         @SerializedName("title")
         private String title;
 
@@ -99,6 +99,9 @@ public class Book {
         @SerializedName("previewLink")
         private String previewLink;
 
+
+        public VolumeInfo(){}
+
         @Override
         public String toString() {
             return "VolumeInfo{" +
@@ -108,14 +111,73 @@ public class Book {
                     ", previewLink='" + previewLink + '\'' +
                     '}';
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.title);
+            dest.writeStringList(this.authors);
+            dest.writeParcelable(this.imageLink, flags);
+            dest.writeString(this.previewLink);
+        }
+
+        protected VolumeInfo(Parcel in) {
+            this.title = in.readString();
+            this.authors = in.createStringArrayList();
+            this.imageLink = in.readParcelable(ImageLinks.class.getClassLoader());
+            this.previewLink = in.readString();
+        }
+
+        public final Creator<VolumeInfo> CREATOR = new Creator<VolumeInfo>() {
+            @Override
+            public VolumeInfo createFromParcel(Parcel source) {
+                return new VolumeInfo(source);
+            }
+
+            @Override
+            public VolumeInfo[] newArray(int size) {
+                return new VolumeInfo[size];
+            }
+        };
     }
 
-    private class ImageLinks {
+    private class ImageLinks implements Parcelable{
         @SerializedName("smallThumbnail")
         private String cover;
+        public ImageLinks() {}
+
+        public ImageLinks(Parcel in) {
+            cover = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(cover);
+        }
+
+        public final Parcelable.Creator<ImageLinks> CREATOR
+                = new Parcelable.Creator<ImageLinks>() {
+            public ImageLinks createFromParcel(Parcel in) {
+                return new ImageLinks(in);
+            }
+
+            public ImageLinks[] newArray(int size) {
+                return new ImageLinks[size];
+            }
+        };
     }
 
     public Book(Cursor cursor) {
+        isFav = true;
         volumeInfo = new VolumeInfo();
         volumeInfo.imageLink = new ImageLinks();
 
@@ -144,4 +206,34 @@ public class Book {
                 ", volumeInfo=" + volumeInfo +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte(this.isFav ? (byte) 1 : (byte) 0);
+        dest.writeString(this.bookId);
+        dest.writeParcelable(this.volumeInfo, flags);
+    }
+
+    protected Book(Parcel in) {
+        this.isFav = in.readByte() != 0;
+        this.bookId = in.readString();
+        this.volumeInfo = in.readParcelable(VolumeInfo.class.getClassLoader());
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel source) {
+            return new Book(source);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 }

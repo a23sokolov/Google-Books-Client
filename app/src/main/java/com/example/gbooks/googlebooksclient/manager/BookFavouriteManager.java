@@ -4,12 +4,19 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.example.gbooks.googlebooksclient.AndroidApplication;
+import com.example.gbooks.googlebooksclient.App;
 import com.example.gbooks.googlebooksclient.database.table.BookTable;
-import com.example.gbooks.googlebooksclient.model.Book;
+import com.example.gbooks.googlebooksclient.model.dto.Book;
+import com.example.gbooks.googlebooksclient.other.Const;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import io.reactivex.Scheduler;
 
 import static com.example.gbooks.googlebooksclient.database.BookContentProvider.*;
 
@@ -18,6 +25,18 @@ import static com.example.gbooks.googlebooksclient.database.BookContentProvider.
  */
 
 public class BookFavouriteManager {
+
+    public BookFavouriteManager() {
+        contentResolver = App.getInstance().getContentResolver();
+        favBooks = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                loadFavouriteBooks();
+            }
+        }).start();
+    }
+
     private static final Object lock = new Object();
 
     public static BookFavouriteManager instance;
@@ -31,18 +50,7 @@ public class BookFavouriteManager {
             return instance;
         }
     }
-    
-    private BookFavouriteManager() {
-        contentResolver = AndroidApplication.getInstance().getContentResolver();
-        favBooks = new ArrayList<>();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadFavouriteBooks();
-            }
-        }).start();
-    }
-    
+
     private void loadFavouriteBooks(){
         synchronized (lock) {
             Cursor cursor = null;

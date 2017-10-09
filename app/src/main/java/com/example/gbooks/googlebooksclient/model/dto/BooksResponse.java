@@ -1,4 +1,4 @@
-package com.example.gbooks.googlebooksclient.model;
+package com.example.gbooks.googlebooksclient.model.dto;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.gbooks.googlebooksclient.manager.BookFavouriteManager;
-import com.example.gbooks.googlebooksclient.model.Book;
+import com.example.gbooks.googlebooksclient.model.dto.Book;
 import com.example.gbooks.googlebooksclient.view.adapter.BookCardRecyclerAdapter;
 import com.example.gbooks.googlebooksclient.view.component.BookItemView;
 
@@ -18,12 +18,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BookItem
     public void setFavourite(Book book) {
         if (book.isFav()) BookFavouriteManager.getInstance().addFavBook(book);
         else BookFavouriteManager.getInstance().deleteFavBook(book);
-        updateAdapter();
+        final boolean remove = (this instanceof FavouriteActivity) ? true : false;
+        mAdapter.changeBookFavStat(book, remove);
     }
 
     protected void showMessage(final String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
-    public abstract void updateAdapter();
 }

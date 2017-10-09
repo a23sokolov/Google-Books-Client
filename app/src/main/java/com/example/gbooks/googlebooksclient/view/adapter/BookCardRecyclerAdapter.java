@@ -1,13 +1,12 @@
 package com.example.gbooks.googlebooksclient.view.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.gbooks.googlebooksclient.R;
-import com.example.gbooks.googlebooksclient.model.Book;
+import com.example.gbooks.googlebooksclient.model.dto.Book;
 import com.example.gbooks.googlebooksclient.view.component.BookItemView;
 
 import java.util.ArrayList;
@@ -28,16 +27,13 @@ public class BookCardRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         BOOK_ITEM
     }
 
-    public BookCardRecyclerAdapter(Context context) {
+    public BookCardRecyclerAdapter() {
         books = new ArrayList<>();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case 0:
-                final View emptyView = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_empty, parent, false);
-                return new EmptySearchHolder(emptyView);
             default:
                 final View bookItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_item, parent, false);
                 return new BookViewHolder(bookItem);
@@ -65,6 +61,25 @@ public class BookCardRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged();
     }
 
+    public void changeBookFavStat(Book book, boolean remove) {
+        int position = bookPosition(book);
+        if (-1 == position) return;
+        if (remove) {
+            books.remove(position);
+            notifyItemRemoved(position);
+        } else {
+            notifyItemChanged(position);
+        }
+    }
+
+    private int bookPosition(Book book) {
+        for (int i=0; i < books.size(); i++) {
+            if (books.get(i).equals(book)) {
+                return i;
+            }
+        }
+        return -1;
+    }
     @Override
     public int getItemCount() {
         return books.size();
@@ -76,12 +91,6 @@ public class BookCardRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public BookViewHolder(View itemView) {
             super(itemView);
             bookItemView = (BookItemView) itemView.findViewById(R.id.book_item);
-        }
-    }
-
-    class EmptySearchHolder extends RecyclerView.ViewHolder {
-        public EmptySearchHolder(View itemView) {
-            super(itemView);
         }
     }
 }
