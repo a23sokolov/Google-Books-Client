@@ -1,7 +1,5 @@
 package com.example.gbooks.googlebooksclient.model;
 
-import android.util.Log;
-
 import com.example.gbooks.googlebooksclient.App;
 import com.example.gbooks.googlebooksclient.model.api.ApiInterface;
 import com.example.gbooks.googlebooksclient.model.dto.BooksResponse;
@@ -14,7 +12,7 @@ import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 
 /**
- * Created by a23sokolov on 25/09/2017.
+ * Created by a23sokolov
  */
 
 public class ModelImpl implements Model{
@@ -37,11 +35,9 @@ public class ModelImpl implements Model{
 
     @Override
     public Observable<BooksResponse> getBooksList(String query) {
-        Log.i("$$$$", "ModelImpl.getBooksList query = " + query + ", apiInterface " +apiInterface);
         return apiInterface
                 .getBooks(query)
                 .subscribeOn(ioThread)
                 .observeOn(uiThread);
     }
-
 }
